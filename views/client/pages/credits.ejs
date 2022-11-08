@@ -1,0 +1,13 @@
+<div data-role="page" id="credits">
+    <%-include("../ui/header", {name: "Credits", back: "#"}) %>
+    <div class="ui-content" data-role="content">
+        <block>
+            <p>Made with love by <a href="twitter:@ciulinuwu">ciulinuwu</a> using these tools:</p>
+            <p>
+                <% for (let i = 0; i < data.length; i++) { %>
+                    <a href="<%=data[i].a%>" target="_blank"><%=data[i].b%></a>,
+                <% } %>
+            </p>
+        </block>
+    </div>
+</div>

@@ -1,0 +1,62 @@
+[
+    {
+        "a": "https://nodejs.org",
+        "b": "NodeJS"
+    },
+    {
+        "a": "https://github.com/open-cli-tools/concurrently",
+        "b": "Concurrently"
+    },
+    {
+        "a": "https://github.com/remy/nodemon",
+        "b": "Nodemon"
+    },
+    {
+        "a": "https://typescriptlang.org",
+        "b": "TypeScript"
+    },
+    {
+        "a": "https://expressjs.com",
+        "b": "Express"
+    },
+    {
+        "a": "https://github.com/expressjs/body-parser#readme",
+        "b": "body-parser"
+    },
+    {
+        "a": "https://github.com/node-fetch/node-fetch",
+        "b": "node-fetch"
+    },
+    {
+        "a": "https://taitems.github.io/iOS-Inspired-jQuery-Mobile-Theme",
+        "b": "iOS-Inspired-jQuery-Mobile-Theme"
+    },
+    {
+        "a": "https://jquery.com",
+        "b": "jQuery"
+    },
+    {
+        "a": "https://jquerymobile.com",
+        "b": "jQuery Mobile"
+    },
+    {
+        "a": "https://api.hypixel.net",
+        "b": "Hypixel API"
+    },
+    {
+        "a": "https://hypixel.krashnz.com",
+        "b": "hypixel.krashnz.com"
+    },
+    {
+        "a": "https://github.com/zikeji/node-hypixel",
+        "b": "@zikeji/hypixel"
+    },
+    {
+        "a": "https://api.mojang.com",
+        "b": "Mojang API"
+    },
+    {
+        "a": "https://www.dafont.com/minecraftia.font",
+        "b": "Minecraftia Font"
+    }
+]

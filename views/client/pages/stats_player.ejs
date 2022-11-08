@@ -1,0 +1,13 @@
+<div data-role="page" id="stats:player">
+    <%-include("../ui/header", {name: "Profile", back: "#lookup"}) %>
+    <div class="ui-content" data-role="content">
+        <block>
+            <% for (let i = 0; i < data.length; i++) { %>
+            <div class="ui-field">
+                <p><%=data[i].a%></p>
+                <p><small class="<%=data[i].b%>"></small></p>
+            </div>
+            <% } %>
+        </block>
+    </div>
+</div>

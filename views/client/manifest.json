@@ -1,0 +1,18 @@
+{
+    "name": "Hypixel.app",
+    "short_name": "Hypixel",
+    "lang": "en",
+    "start_url": "/",
+    "id": "/",
+    "display": "standalone",
+    "description": "Look-up Hypixel Player Stats",
+    "scope": "/",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/assets/img/icon@2x.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ]
+}

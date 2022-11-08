@@ -1,0 +1,42 @@
+[
+    {
+        "a": "Player Name",
+        "b": "Field.Main.PlayerName" 
+    },
+    {
+        "a": "Server Rank",
+        "b": "Field.Main.Rank" 
+    },
+    {
+        "a": "First Login",
+        "b": "Field.Main.firstLogin" 
+    },
+    {
+        "a": "Last Login",
+        "b": "Field.Main.lastLogin" 
+    },
+    {
+        "a": "Most Recent Game",
+        "b": "Field.Main.mostRecentGameType" 
+    },
+    {
+        "a": "Time Playing",
+        "b": "Field.Main.timePlaying" 
+    },
+    {
+        "a": "Network Experience",
+        "b": "Field.Main.networkExp" 
+    },
+    {
+        "a": "Karma",
+        "b": "Field.Main.karma" 
+    },
+    {
+        "a": "Achievement Points",
+        "b": "Field.Main.achievementPoints" 
+    },
+    {
+        "a": "Player UUID",
+        "b": "Field.Main.UUID" 
+    }
+]
