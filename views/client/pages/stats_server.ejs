@@ -2,10 +2,12 @@
     <%-include("../ui/header", {name: "Hypixel Stats", back: "#Home"}) %>
     <div class="ui-content" data-role="content">
         <block>
-            <div class="ui-field">
-                <p>Online players</p>
-                <p><small class="Field.Server.currentPlayers"></small></p>
-            </div>
+            <% for (let i = 0; i < data.length; i++) { %>
+                <div class="ui-field">
+                    <p><%=data[i].a%></p>
+                    <p><small class="<%=data[i].b%>"></small></p>
+                </div>
+            <% } %>
         </block>
     </div>
 </div>

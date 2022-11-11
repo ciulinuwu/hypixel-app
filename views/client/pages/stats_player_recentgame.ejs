@@ -1,0 +1,15 @@
+<div data-role="page" id="stats:player:recentGame">
+    <%-include("../ui/header", {name: "Profile", back: "#stats:player"}) %>
+    <div class="ui-content" data-role="content">
+        <block>
+            <ul data-role="listview" data-inset="true">
+                <% for (let i = 0; i < data.length; i++) { %>
+                    <li class="ui-field">
+                        <p><%=data[i].a%></p>
+                        <p><small class="<%=data[i].b%>"></small></p>
+                    </li>
+                <% } %>
+            </ul>
+        </block>
+    </div>
+</div>

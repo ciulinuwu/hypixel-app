@@ -800,15 +800,23 @@ span[data-text-color^="DARK_GRAY"] {
 	color: #555555;
 }
 
+[hidden] {
+	display: none;
+}
+
 .ui-field {
-	padding: .1em 1em;
- 	background-color: white;
- 	border-top: 1px solid #CECECE;
+	padding: .1em 1em !important;
+ 	background-color: white !important;
+ 	border-top: 1px solid #CECECE !important;
+}
+
+.ui-field a {
+	padding: 0 !important;
 }
 
 .ui-field p {
-	margin: 0;
-    padding: 0;
+	margin: 0 !important;
+    padding: 0 !important;
 }
 
 .ui-field small {

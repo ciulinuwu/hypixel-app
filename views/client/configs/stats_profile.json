@@ -16,12 +16,13 @@
         "b": "Field.Main.lastLogin" 
     },
     {
-        "a": "Most Recent Game",
-        "b": "Field.Main.mostRecentGameType" 
+        "a": "Recent Game",
+        "b": "Field.Main.mostRecentGameType",
+        "c": "#stats:player:recentGame"
     },
     {
-        "a": "Time Playing",
-        "b": "Field.Main.timePlaying" 
+        "a": "Game Mode",
+        "b": "Field.Main.mostRecentGameMode" 
     },
     {
         "a": "Network Experience",

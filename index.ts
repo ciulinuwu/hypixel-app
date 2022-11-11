@@ -2,18 +2,26 @@ import express, { Express, NextFunction, Request, Response } from "express";
 import bodyparser from "body-parser";
 import ejs from "ejs";
 import fetch from 'node-fetch';
+import fs from 'fs';
 import path from 'path';
-import { Client as HypixelClient } from "@zikeji/hypixel";
+import { Client, Client as HypixelClient } from "@zikeji/hypixel";
 
 const __dirname = path.resolve();
 
 const app: Express = express();
+const jsonConfigs = new Map();
 
 app.set('view engine', 'ejs');
 app.use(bodyparser.urlencoded());
 
-import statsProFields from './views/client/pages/stats_profile.json';
-import jcredits from './views/client/pages/credits.json';
+const jsonFiles = fs.readdirSync("./views/client/configs").filter(file => file.endsWith(".json"));
+
+for (const file of jsonFiles) {
+    const fileName = file.split(".")[0];
+
+    var conf = JSON.parse(fs.readFileSync('./views/client/configs/' + file, 'utf8'));
+    jsonConfigs.set(fileName, conf);
+}
 
 function authenticate(req: Request, res: Response, next: NextFunction): void {
     const h = req.headers;
@@ -25,7 +33,7 @@ function authenticate(req: Request, res: Response, next: NextFunction): void {
 }
 
 app.get("/", (req: Request, res: Response) => {
-    res.render("client/index", {data: {statsProFields: statsProFields, jcredits: jcredits}});
+    res.render("client/index", {data: jsonConfigs});
 });
 
 app.get("/manifest.json", (req: Request, res: Response) => {
@@ -44,9 +52,11 @@ app.post("/api", authenticate, async (req: Request, res: Response) => {
         const f_uuid:any = await fetch("https://api.mojang.com/users/profiles/minecraft/" + req.body.uuid).then(r => r.json());
         try {
             const client = new HypixelClient(APIKEY as string);
+            const $temp = await client.status.uuid(f_uuid.id);
             try {
-                const data = await client.player.uuid(f_uuid.id);
-                res.status(200).json(data);
+                const _default = await client.player.uuid(f_uuid.id);
+                const _recentgame = $temp;
+                res.status(200).json({_default, _recentgame});
             } catch(err) {
                 res.status(400).send("3");
             }

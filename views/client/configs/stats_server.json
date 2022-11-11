@@ -1,0 +1,10 @@
+[
+    {
+        "a": "Online players",
+        "b": "Field.Server.currentPlayers"
+    },
+    {
+        "a": "Watchdog Stats",
+        "b": "Field.Server.Watchdog"
+    }
+]

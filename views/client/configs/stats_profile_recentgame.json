@@ -1,0 +1,10 @@
+[
+    {
+        "a": "Game Type",
+        "b": "Field.recentGame.gameType" 
+    },
+    {
+        "a": "Game Mode",
+        "b": "Field.recentGame.gameMode" 
+    }
+]

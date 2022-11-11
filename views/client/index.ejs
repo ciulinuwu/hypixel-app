@@ -4,12 +4,18 @@
     <%-include("./head")%>
 </head>
 <body>
+    <%
+    function find(param) {
+        return data.get(param);
+    }
+    %>
     <%-include("./pages/home")%>
-    <%-include("./pages/credits", {data: data.jcredits})%>
+    <%-include("./pages/credits", {data: find("credits")})%>
     <%-include("./pages/settings")%>
     <%-include("./pages/lookup")%>
-    <%-include("./pages/stats_player", {data: data.statsProFields})%>
-    <%-include("./pages/stats_server")%>
+    <%-include("./pages/stats_player", {data: find("stats_profile")})%>
+    <%-include("./pages/stats_player_recentgame", {data: find("stats_profile_recentgame")})%>
+    <%-include("./pages/stats_server", {data: find("stats_server")})%>
     <script src="assets/main.min.js"></script>
 </body>
 </html>

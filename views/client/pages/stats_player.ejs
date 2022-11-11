@@ -2,12 +2,20 @@
     <%-include("../ui/header", {name: "Profile", back: "#lookup"}) %>
     <div class="ui-content" data-role="content">
         <block>
-            <% for (let i = 0; i < data.length; i++) { %>
-            <div class="ui-field">
-                <p><%=data[i].a%></p>
-                <p><small class="<%=data[i].b%>"></small></p>
-            </div>
-            <% } %>
+            <ul data-role="listview" data-inset="true">
+                <% for (let i = 0; i < data.length; i++) { %>
+                    <li class="ui-field">
+                        <% if (data[i].c) { %>
+                        <a href="<%=data[i].c%>">
+                        <% } %>
+                            <p><%=data[i].a%></p>
+                            <p><small class="<%=data[i].b%>"></small></p>
+                        <% if (data[i].c) { %>
+                        </a>
+                        <% } %>
+                    </li>
+                <% } %>
+            </ul>
         </block>
     </div>
 </div>
