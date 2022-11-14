@@ -23,13 +23,10 @@ Hypixel.app was made with love by [@ciulinuwu](https://github.com/ciulinuwu) usi
 * Nodemon
 * TypeScript
 * Express
-* body-parser
-* node-fetch
 * iOS-Inspired-jQuery-Mobile-Theme
 * jQuery
 * jQuery Mobile
 * Hypixel API
 * hypixel.krashnz.com
-* @zikeki/hypixel
-* Mojang API
+* Ashcon Mojang API
 * Minecraftia Font
