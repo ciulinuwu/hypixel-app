@@ -16,17 +16,18 @@
         "b": "Field.Main.lastLogin" 
     },
     {
-        "a": "Recent Game",
+        "a": "Current Game",
         "b": "Field.Main.mostRecentGameType",
         "c": "#stats:player:recentGame"
     },
     {
-        "a": "Game Mode",
-        "b": "Field.Main.mostRecentGameMode" 
+        "a": "Time Playing",
+        "b": "Field.Main.timePlaying" 
     },
     {
         "a": "Network Experience",
-        "b": "Field.Main.networkExp" 
+        "b": "Field.Main.networkExp",
+        "c": "#stats:player:networkExp"
     },
     {
         "a": "Karma",
@@ -34,7 +35,8 @@
     },
     {
         "a": "Achievement Points",
-        "b": "Field.Main.achievementPoints" 
+        "b": "Field.Main.achievementPoints",
+        "c": "#stats:player:achievements"
     },
     {
         "a": "Player UUID",

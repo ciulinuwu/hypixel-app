@@ -1,0 +1,14 @@
+[
+    {
+        "a": "Network Level",
+        "b": "Field.networkExp.Level"
+    },
+    {
+        "a": "Network Experience",
+        "b": "Field.networkExp.Experience"
+    },
+    {
+        "a": "Experience till level up",
+        "b": "Field.networkExp.expToNextLevel"
+    }
+]

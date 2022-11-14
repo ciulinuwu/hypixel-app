@@ -6,5 +6,9 @@
     {
         "a": "Game Mode",
         "b": "Field.recentGame.gameMode" 
+    },
+    {
+        "a": "Game Map",
+        "b": "Field.recentGame.gameMap"
     }
 ]

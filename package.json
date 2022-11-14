@@ -5,18 +5,15 @@
     "email": "ciulinuwu@gmail.com"
   },
   "description": "A small web app made for fun",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/ciulinuwu/hypixel-app.git"
   },
   "dependencies": {
     "@types/ejs": "^3.1.1",
-    "@types/node-fetch": "^2.6.2",
-    "@zikeji/hypixel": "^3.1.1",
     "ejs": "^3.1.8",
-    "express": "^4.18.2",
-    "node-fetch": "^3.2.10"
+    "express": "^4.18.2"
   },
   "type": "module",
   "devDependencies": {

@@ -20,14 +20,6 @@
         "b": "Express"
     },
     {
-        "a": "https://github.com/expressjs/body-parser#readme",
-        "b": "body-parser"
-    },
-    {
-        "a": "https://github.com/node-fetch/node-fetch",
-        "b": "node-fetch"
-    },
-    {
         "a": "https://taitems.github.io/iOS-Inspired-jQuery-Mobile-Theme",
         "b": "iOS-Inspired-jQuery-Mobile-Theme"
     },
@@ -48,12 +40,8 @@
         "b": "hypixel.krashnz.com"
     },
     {
-        "a": "https://github.com/zikeji/node-hypixel",
-        "b": "@zikeji/hypixel"
-    },
-    {
-        "a": "https://api.mojang.com",
-        "b": "Mojang API"
+        "a": "https://github.com/Electroid/mojang-api",
+        "b": "Ashcon Mojang API"
     },
     {
         "a": "https://www.dafont.com/minecraftia.font",

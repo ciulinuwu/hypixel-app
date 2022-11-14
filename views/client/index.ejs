@@ -15,7 +15,9 @@
     <%-include("./pages/lookup")%>
     <%-include("./pages/stats_player", {data: find("stats_profile")})%>
     <%-include("./pages/stats_player_recentgame", {data: find("stats_profile_recentgame")})%>
+    <%-include("./pages/stats_player_networkexp", {data: find("stats_profile_networkexp")})%>
+    <%-include("./pages/stats_player_achievements", {data: find("stats_profile_achievements")})%>
     <%-include("./pages/stats_server", {data: find("stats_server")})%>
-    <script src="assets/main.min.js"></script>
+    <script async="" src="assets/main.min.js"></script>
 </body>
 </html>
