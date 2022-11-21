@@ -748,55 +748,90 @@ input.ui-input-text, .ui-input-search {
 	src: url(fonts/Minecraftia-Regular.ttf);
 }
 
-p[data-text-color^="RED"],
-span[data-text-color^="RED"] {
-	color: #FF5555;
+[data-text-color^="RED"] {
+	color: #FF5555 !important;
 }
-span[data-text-color^="GOLD"] {
-	color: #FFAA00;
+[data-text-color^="GOLD"] {
+	color: #FFAA00 !important;
 }
-span[data-text-color^="GREEN"] {
-	color: #55FF55;
+[data-text-color^="GREEN"] {
+	color: #55FF55 !important;
 }
-span[data-text-color^="YELLOW"] {
-	color: #FFFF55;
+[data-text-color^="YELLOW"] {
+	color: #FFFF55 !important;
 }
-span[data-text-color^="LIGHT_PURPLE"] {
-	color: #FF55FF;
+[data-text-color^="LIGHT_PURPLE"] {
+	color: #FF55FF !important;
 }
-span[data-text-color^="WHITE"] {
-	color: #FFFFFF;
+[data-text-color^="WHITE"] {
+	color: #FFFFFF !important;
 }
-span[data-text-color^="AQUA"] {
-	color: #55FFFF;
+[data-text-color^="AQUA"] {
+	color: #55FFFF !important;
 }
-span[data-text-color^="DARK_GREEN"] {
-	color: #00AA00;
+[data-text-color^="DARK_GREEN"] {
+	color: #00AA00 !important;
 }
-span[data-text-color^="DARK_RED"] {
-	color: #AA0000;
+[data-text-color^="DARK_RED"] {
+	color: #AA0000 !important;
 }
-span[data-text-color^="DARK_AQUA"] {
-	color: #00AAAA;
+[data-text-color^="DARK_AQUA"] {
+	color: #00AAAA !important;
 }
-span[data-text-color^="DARK_PURPLE"] {
-	color: #AA00AA;
+[data-text-color^="DARK_PURPLE"] {
+	color: #AA00AA !important;
 }
-span[data-text-color^="BLACK"] {
-	color: #000000;
+[data-text-color^="BLACK"] {
+	color: #000000 !important;
 }
-span[data-text-color^="DARK_BLUE"] {
-	color: #0000AA;
+[data-text-color^="DARK_BLUE"] {
+	color: #0000AA !important;
 }
-span[data-text-color^="GRAY"] {
-	color: #AAAAAA;
+[data-text-color^="GRAY"] {
+	color: #AAAAAA !important;
 }
-span[data-text-color^="DARK_GRAY"] {
-	color: #555555;
+[data-text-color^="DARK_GRAY"] {
+	color: #555555 !important;
 }
 
 [hidden] {
 	display: none;
+}
+
+ul.achievements {
+	margin-top: 7px;
+	padding-left: 0;
+}
+
+ul.achievements li {
+	height: 55px;
+	width: 55px;
+	background: #ddd;
+	display: inline-block;
+	margin-right: 3px;
+	margin-bottom: 3px;
+	background: url('https://hypixel.net/styles/hypixel-uix/hypixel/achievement-empty-gray.png') center center no-repeat;
+	border-radius: 3px;
+}
+
+ul.achievements li a {
+	width: inherit;
+	height: inherit;
+}
+
+ul.achievements li .achievementIcon {
+	width: inherit;
+	height: inherit;
+	background: transparent;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 55px 55px;
+	opacity: 0.3;
+	background-image: url('https://hypixel.net/styles/hypixel-uix/hypixel/achievements/unknown.png')
+}
+
+ul.achievements li.completed {
+	background-image: url('https://hypixel.net/styles/hypixel-uix/hypixel/achievement-empty.png')
 }
 
 .ui-field {

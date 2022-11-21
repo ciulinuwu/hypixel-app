@@ -3,10 +3,12 @@ var $inputSettingsApiKey=$("[class='Input.Settings.apiKey']"),
 $inputLookUpUUID=$("[class='Input.lookUp.UUID']"),
 $buttonSettingsSApiKey=$("[class^='Button.Settings.s_apiKey']"),
 $textSettingsApiKeyErrMsg=$("[class='Text.Settings.apiKey.ErrorMessage'] > small"),
+$textSettingsApiKeySucMsg=$("[class='Text.Settings.apiKey.SuccessMessage'] > small"),
 $textlookUpErrMsg=$("[class='Text.lookUp.ErrorMessage'] > small"),
-gameTypes={},
-endpoint="https://api.hypixel.net",
-isSetup=!1,
+$gameTypes={},
+$achievements={},
+$endpoint="https://api.hypixel.net",
+$isSetup=!1,
 $lastLogin=0,
 $isOnline=!1,
 $data = {};
@@ -16,6 +18,7 @@ $(document).ready(function() {
     getGameTypes();
     getAchievements();
 });
+/** Get item from storage */
 function getItem(a) {
     return localStorage.getItem(a);
 }
@@ -24,7 +27,7 @@ function app_run(){
     getWatchdogStats();
 }
 function setup_run(){
-    isSetup = !0;
+    $isSetup = !0;
     $.mobile.changePage("#settings");
     $("#settings .ui-btn-left").hide();
     $buttonSettingsSApiKey.text("Continue");
@@ -35,21 +38,26 @@ function setup_chk(){
 }
 function setup_suc(){
     localStorage.setItem("setup", "1");
-    isSetup = !1;
+    $isSetup = !1;
     alert("API key has been set!\nEnjoy the app!");
     $.mobile.changePage("#Home");
     $("#settings .ui-btn-left").show();
     $textSettingsApiKeyErrMsg.text("");
+    $textSettingsApiKeySucMsg.text("");
 }
 function setup_err(a){
     console.error(a);
 }
 function apikey_suc(){
-    if (isSetup) return setup_suc();
+    if ($isSetup) return setup_suc();
+    $textSettingsApiKeySucMsg.text("API key is valid");
+    $textSettingsApiKeyErrMsg.text("");
 }
 function apikey_err(a){
-    a=JSON.parse(a.responseText);
-    $textSettingsApiKeyErrMsg.text(a.cause);
+    a=a.responseText && JSON.parse(a.responseText) || {cause:a};
+    a=a.cause;
+    $textSettingsApiKeyErrMsg.text(a);
+    $textSettingsApiKeySucMsg.text("");
 }
 function getPlayerUUID(){
     _fetch("GET", "https://api.ashcon.app/mojang/v2/user/" + $inputLookUpUUID.val(), parsePlayerUUID, errorHandler);
@@ -72,34 +80,64 @@ function parseServerStats(a){
     $("[class='Field.Server.currentPlayers']").text(parseNumber(a.stats[0].value));
 }
 function getGameTypes(){
-    _fetch("GET", endpoint + "/resources/games", function(e){
-        gameTypes = e.games;
+    _fetch("GET", $endpoint + "/resources/games", function(a){
+        $gameTypes = a.games;
     }, errorHandler);
 }
 function getWatchdogStats(){
-    _fetch("GET", endpoint + "/watchdogstats?key=" + getItem("apiKey"), parseWatchdogStats, errorHandler);
+    _fetch("GET", $endpoint + "/watchdogstats?key=" + getItem("apiKey"), parseWatchdogStats, errorHandler);
 }
 function parseWatchdogStats(a){
     $("[class='Field.Server.Watchdog']").text(parseNumber(a.watchdog_total));
 }
 function getAchievements(){
-    _fetch("GET", endpoint + "/resources/achievements", parseAchievements, errorHandler);
+    _fetch("GET", $endpoint + "/resources/achievements", parseAchievements, errorHandler);
 }
 function parseAchievements(a){
-    // to-be-added
+    var b=$("[id='stats:player:achievements'] [data-role='collapsibleset']");
+    new Promise(function(c, e){
+        for(var d in a.achievements){
+            c=getGame(d.toUpperCase());
+            e=a.achievements[d];
+            $("<div/>", {
+                "data-role": "collapsible",
+                "data-name": d,
+                html: "<h3>"+c+"</h3><ul class='achievements'></ul>"
+            }).appendTo(b);
+            for(var f in e.one_time) {
+                $("<li/>", {
+                    "data-internal": d + "_" + f.toLowerCase(),
+                    "data-name": e.one_time[f].name,
+                    "data-description": e.one_time[f].description,
+                    html: "<a data-rel=\"popup\" href=\"#achievementPop\"><div class='achievementIcon' data-icon='https://hypixel.net/styles/hypixel-uix/hypixel/achievements/" + f + ".svg')></div></a>"
+                }).appendTo($("[data-name='"+d+"'] .achievements"));
+                $("[data-internal='" + d + "_" + f.toLowerCase() + "']").click(ent_achiv_click);
+            }
+        }
+    });
+}
+function ent_achiv_click(a){
+    a = a.currentTarget.dataset;
+    $("#achievementPop").html('<p data-text-color="BLACK">' + a.name + '</p><p data-text-color="BLACK">' + a.description + '</p>');
+console.log(a);
 }
 function getPlayerStats(a){
-    _fetch("GET", endpoint + "/player?key=" + getItem("apiKey") + "&uuid=" + a, function(b){
-        "object"===typeof b.player?($data._default=b.player,getPlayerStatus(b.player.uuid)):errorHandler("Player has never played on Hypixel.");
+    _fetch("GET", $endpoint + "/player?key=" + getItem("apiKey") + "&uuid=" + a, function(b){
+        null !== b.player ? (
+            $data._default=b.player,
+            getPlayerStatus(b.player.uuid)
+        ) : errorHandler("Player has never played on Hypixel.");
     }, errorHandler);
 }
 function parsePlayerStats(a){
-    console.log(a);
+    //console.log(a);
     clearErr();
     clearField();
     $lastLogin = a._default.lastLogin;
     $isOnline = a._recentgame.online;
     var b = a._default.prefix || a._default.rank || ("NONE" !== a._default.monthlyPackageRank ? a._default.monthlyPackageRank: !1) || a._default.newPackageRank || "DEFAULT";
+    var c = a._default.achievementsOneTime;
+    // Field.Main
     $("[class='Field.Main.PlayerName']").html(buildName(a._default.displayname, b));
     $("[class='Field.Main.Rank']").html(buildRank(b, a._default.rankPlusColor));
     $("[class='Field.Main.firstLogin']").text(buildTime(a._default.firstLogin));
@@ -108,17 +146,26 @@ function parsePlayerStats(a){
     $("[class='Field.Main.karma']").text(parseNumber(a._default.karma || 0));
     $("[class='Field.Main.achievementPoints']").text(parseNumber(a._default.achievementPoints));
     $("[class='Field.Main.UUID']").text(a._default.uuid);
-    $("[class='Field.Main.mostRecentGameType']").text(getGame(a._recentgame.gameType));
-    $("[class='Field.recentGame.gameType']").text(getGame(a._recentgame.gameType));
+    $("[class='Field.Main.mostRecentGameType']").text(
+        ($isOnline ? getGame(a._recentgame.gameType) : "Not currently online")
+    );
+    // Field.recentGame
+    $("[class='Field.recentGame.gameType']").text(
+        ($isOnline ? getGame(a._recentgame.gameType) : "Not currently online")
+    );
     $("[class='Field.recentGame.gameMode']").text(getGameMode(a._recentgame.gameType,a._recentgame.mode));
     $("[class='Field.recentGame.gameMap']").text(a._recentgame.map || "Unknown");
+    // Field.networkExp
     $("[class='Field.networkExp.Level").text(getNetworkLevel(a._default.networkExp));
     $("[class='Field.networkExp.Experience']").text(parseNumber(a._default.networkExp));
     $("[class='Field.networkExp.expToNextLevel']").text(parseNumber(getLevelUpExp(getNetworkLevel(a._default.networkExp))));
+    // Field.achievements
+    for (var i = 0; i < c.length; ++i) console.log(c[i]), $("[data-internal='" + c[i] + "']").attr("class", "completed");
+    // switch page
     $.mobile.changePage("#stats:player");
 }
 function getPlayerStatus(a){
-    _fetch("GET", endpoint + "/status?key=" + getItem("apiKey") + "&uuid=" + a, function(b) {
+    _fetch("GET", $endpoint + "/status?key=" + getItem("apiKey") + "&uuid=" + a, function(b) {
         $data._recentgame = b.session;
         parsePlayerStats($data);
     }, errorHandler);
@@ -224,17 +271,68 @@ function getNetworkLevel(a){
 function getLevelUpExp(a){
     return a < 1 ? 10000 : 2500 * (a - 1) + 10000;
 }
+function getGameList(a){
+    switch (a) {
+        case "BLITZ":
+            a = "Blitz Survival Games";
+            break;
+        case "BUILDBATTLE":
+            a = "Build Battle";
+            break;
+        case "COPSANDCRIMS":
+            a = "Cops and Crims";
+            break;
+        case "EASTER":
+            a = "Easter";
+            break;
+        case "GENERAL":
+            a = "General";
+            break;
+        case "MURDERMYSTERY":
+            a = "Murder Mystery";
+            break;
+        case "QUAKE":
+            a = "Quake";
+            break;
+        case "SPEEDUHC":
+            a = "Speed UHC";
+            break;
+        case "SUMMER":
+            a = "Summer";
+            break;
+        case "SUPERSMASH":
+            a = "Smash Heroes";
+            break;
+        case "TRUECOMBAT":
+            a = "Crazy Walls";
+            break;
+        case "WARLORDS":
+            a = "Warlords";
+            break;
+        case "WOOLGAMES":
+            a = "Wool Games";
+            break;
+        default:
+            a = a;
+    }
+    return a;
+}
+/**
+ * converts type name into clean name
+ * @param {string} a
+ * @returns string
+ */
 function getGame(a){
-    return gameTypes[a] && gameTypes[a].name || "Not playing right now";
+    return $gameTypes[a] && $gameTypes[a].name || getGameList(a);
 }
 function getGameMode(a, b){
-    return gameTypes[a] && gameTypes[a].modeNames && gameTypes[a].modeNames[b] || b;
+    return $gameTypes[a] && $gameTypes[a].modeNames && $gameTypes[a].modeNames[b] || b;
 }
 $inputSettingsApiKey.on("input", function(){
     localStorage.setItem("apiKey", $inputSettingsApiKey.val());
 });
 $buttonSettingsSApiKey.click(function(){
-    validateApiKeyRegex($inputSettingsApiKey.val())&&36===$inputSettingsApiKey.val().length?_fetch("GET",endpoint+"/key?key="+getItem("apiKey"),apikey_suc,apikey_err):apikey_err;
+    validateApiKeyRegex($inputSettingsApiKey.val())&&36===$inputSettingsApiKey.val().length?_fetch("GET",$endpoint+"/key?key="+getItem("apiKey"),apikey_suc,apikey_err):apikey_err("Invalid API key");
 });
 $("#lookUp").submit(function(a) {
     a.preventDefault();

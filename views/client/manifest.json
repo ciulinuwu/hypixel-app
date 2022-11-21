@@ -1,5 +1,6 @@
 {
     "name": "Hypixel.app",
+    "author": "Emiri Floarea (ciulinuwu)",
     "short_name": "Hypixel",
     "lang": "en",
     "start_url": "/",
@@ -14,5 +15,6 @@
             "type": "image/png",
             "sizes": "512x512"
         }
-    ]
+    ],
+    "background-color": "#ff00ff"
 }
