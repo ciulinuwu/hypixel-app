@@ -13,6 +13,7 @@ $lastLogin=0,
 $isOnline=!1,
 $data = {};
 $(document).ready(function() {
+    $("#globalPop").popup();
     setup_chk();
     getServerStats();
     getGameTypes();
@@ -23,15 +24,25 @@ function getItem(a) {
     return localStorage.getItem(a);
 }
 $inputSettingsApiKey.val(getItem("apiKey"));
+function globalPopup(a,b,c){
+    $("#globalPop .title span").text(a);
+    $("#globalPop .text span").text(b);
+    /** Fuck jQuery Mobile Popup Module */
+    var d = setInterval(function(){
+        $("#globalPop").popup("open");
+        clearInterval(d);
+        $("#globalPop button").on("click", c);
+    }, 1);
+}
 function app_run(){
     getWatchdogStats();
 }
 function setup_run(){
     $isSetup = !0;
-    $.mobile.changePage("#settings");
-    $("#settings .ui-btn-left").hide();
-    $buttonSettingsSApiKey.text("Continue");
-    alert("Welcome!\nPlease enter API key to continue.");
+    globalPopup("Welcome!", "Please enter API key to continue.", function(){
+        $("#settings a.revert-btn").hide();
+        $.mobile.changePage("#settings");
+    });
 }
 function setup_chk(){
     getItem("setup") ? app_run() : setup_run();
@@ -94,32 +105,33 @@ function getAchievements(){
     _fetch("GET", $endpoint + "/resources/achievements", parseAchievements, errorHandler);
 }
 function parseAchievements(a){
-    var b=$("[id='stats:player:achievements'] [data-role='collapsibleset']");
-    new Promise(function(c, e){
-        for(var d in a.achievements){
-            c=getGame(d.toUpperCase());
-            e=a.achievements[d];
-            $("<div/>", {
-                "data-role": "collapsible",
-                "data-name": d,
-                html: "<h3>"+c+"</h3><ul class='achievements'></ul>"
-            }).appendTo(b);
-            for(var f in e.one_time) {
-                $("<li/>", {
-                    "data-internal": d + "_" + f.toLowerCase(),
-                    "data-name": e.one_time[f].name,
-                    "data-description": e.one_time[f].description,
-                    html: "<a data-rel=\"popup\" href=\"#achievementPop\"><div class='achievementIcon' data-icon='https://hypixel.net/styles/hypixel-uix/hypixel/achievements/" + f + ".svg')></div></a>"
-                }).appendTo($("[data-name='"+d+"'] .achievements"));
-                $("[data-internal='" + d + "_" + f.toLowerCase() + "']").click(ent_achiv_click);
-            }
-        }
-    });
+    var b=$("[id='stats:player:achievements'] [data-role='collapsibleset']"),
+    d;
+    //new Promise(function(c, e){
+    for(d in a.achievements){
+        c=getGame(d.toUpperCase());
+        e=a.achievements[d];
+        $("<div/>", {
+            "data-role": "collapsible",
+            "data-name": d,
+            html: "<h3>"+c+"</h3><ul class='achievements'></ul>"
+        }).appendTo(b);
+        for(var f in e.one_time)
+            $("<li/>", {
+                "data-internal": d + "_" + f.toLowerCase(),
+                "data-completed": !1,
+                "data-name": e.one_time[f].name,
+                "data-description": e.one_time[f].description,
+                html: "<a data-rel=\"popup\" href=\"#achievementPop\"><div class='achievementIcon' data-icon='https://hypixel.net/styles/hypixel-uix/hypixel/achievements/" + f + ".svg')></div></a>"
+            }).appendTo($("[data-name='"+d+"'] .achievements")),
+            $("[data-internal='" + d + "_" + f.toLowerCase() + "']").click(ent_achiv_click);
+    }
+    //});
 }
 function ent_achiv_click(a){
     a = a.currentTarget.dataset;
-    $("#achievementPop").html('<p data-text-color="BLACK">' + a.name + '</p><p data-text-color="BLACK">' + a.description + '</p>');
-console.log(a);
+    var b = "true" == a.completed;
+    $("#achievementPop").html('<p>' + a.name + '</p><p style="font-size: 14px">' + a.description + '</p><hr/><p class="center" style="font-size: 12px" data-text-color="' + (b ? "GREEN" : "GRAY") + '">' + (b ? "Completed" : "Not Completed") + '</p>');
 }
 function getPlayerStats(a){
     _fetch("GET", $endpoint + "/player?key=" + getItem("apiKey") + "&uuid=" + a, function(b){
@@ -133,10 +145,11 @@ function parsePlayerStats(a){
     //console.log(a);
     clearErr();
     clearField();
+    clearAchiev();
     $lastLogin = a._default.lastLogin;
     $isOnline = a._recentgame.online;
-    var b = a._default.prefix || a._default.rank || ("NONE" !== a._default.monthlyPackageRank ? a._default.monthlyPackageRank: !1) || a._default.newPackageRank || "DEFAULT";
-    var c = a._default.achievementsOneTime;
+    var b = a._default.prefix || a._default.rank || ("NONE" !== a._default.monthlyPackageRank ? a._default.monthlyPackageRank: !1) || a._default.newPackageRank || "DEFAULT",
+    c = a._default.achievementsOneTime;
     // Field.Main
     $("[class='Field.Main.PlayerName']").html(buildName(a._default.displayname, b));
     $("[class='Field.Main.Rank']").html(buildRank(b, a._default.rankPlusColor));
@@ -160,7 +173,7 @@ function parsePlayerStats(a){
     $("[class='Field.networkExp.Experience']").text(parseNumber(a._default.networkExp));
     $("[class='Field.networkExp.expToNextLevel']").text(parseNumber(getLevelUpExp(getNetworkLevel(a._default.networkExp))));
     // Field.achievements
-    for (var i = 0; i < c.length; ++i) console.log(c[i]), $("[data-internal='" + c[i] + "']").attr("class", "completed");
+    for (a = 0; a < c.length; ++a) $("[data-internal='" + c[a] + "']").attr("class", "completed"), $("[data-internal='" + c[a] + "']").attr("data-completed", !0);
     // switch page
     $.mobile.changePage("#stats:player");
 }
@@ -179,6 +192,9 @@ function clearErr(){
     $("p[data-text-color='RED'] > small").each(function(){
         $(this).text("");
     });
+}
+function clearAchiev(){
+    $("li.completed").removeAttr("class");
 }
 function _fetch(type, url, success, error) {
     $.ajax({
@@ -215,7 +231,7 @@ function parseNumber(a){
     }
 }
 function buildRank(a, b) {
-    return (a = a.replace("§c[OWNER]", "<span data-text-color='" + getColor("OWNER") + "'>OWNER</span>")
+    return a.replace("§c[OWNER]", "<span data-text-color='" + getColor("OWNER") + "'>OWNER</span>")
     .replace("ADMIN", "<span data-text-color='" + getColor("OWNER") + "'>ADMIN</span>")
     .replace("GAME_MASTER", "<span data-text-color='" + getColor("GAME_MASTER") + "'>GM</span>")
     .replace("YOU", "<span data-text-color='" + getColor("YOU") + "'>You</span>")
@@ -224,7 +240,7 @@ function buildRank(a, b) {
     .replace("MVP", "<span data-text-color='" + getColor("MVP") + "'>MVP</span>")
     .replace("SUPERSTAR", "<span data-text-color='" + getColor("SUPERSTAR") + "'>MVP</span>_PLUS_PLUS")
     .replace("DEFAULT", "<span data-text-color='" + getColor("DEFAULT") + "'>Default</span>")
-    .replace(/_PLUS/g, "<span data-text-color='" + b + "'>+</span>"));
+    .replace(/_PLUS/g, "<span data-text-color='" + b + "'>+</span>");
 }
 function buildName(a, b){
     return "<span data-text-color='" + getColor(b) + "'>" + a + "</span>";
@@ -266,10 +282,10 @@ function getColor(a) {
     return a;
 }
 function getNetworkLevel(a){
-    return Math.round((Math.sqrt((2 * a) + 30625) / 50) - 2.5);
+    return Math.round(Math.sqrt(2 * a + 30625) / 50 - 2.5);
 }
 function getLevelUpExp(a){
-    return a < 1 ? 10000 : 2500 * (a - 1) + 10000;
+    return 1 > a ? 1E4 : 2500 * (a - 1) + 1E4;
 }
 function getGameList(a){
     switch (a) {
@@ -311,9 +327,6 @@ function getGameList(a){
             break;
         case "WOOLGAMES":
             a = "Wool Games";
-            break;
-        default:
-            a = a;
     }
     return a;
 }
@@ -332,11 +345,13 @@ $inputSettingsApiKey.on("input", function(){
     localStorage.setItem("apiKey", $inputSettingsApiKey.val());
 });
 $buttonSettingsSApiKey.click(function(){
-    validateApiKeyRegex($inputSettingsApiKey.val())&&36===$inputSettingsApiKey.val().length?_fetch("GET",$endpoint+"/key?key="+getItem("apiKey"),apikey_suc,apikey_err):apikey_err("Invalid API key");
+    validateApiKeyRegex($inputSettingsApiKey.val())&&36===$inputSettingsApiKey.val().length?_fetch("GET",$endpoint+"/key?key="+$inputSettingsApiKey.val(),apikey_suc,apikey_err):apikey_err("Invalid API key");
 });
 $("#lookUp").submit(function(a) {
     a.preventDefault();
     $("#popupiOS").popup("open");
+    if ($inputLookUpUUID.val().length < 2)
+    return errorHandler("Field cannot be empty.");
     if (!/^[a-zA-Z0-9_]*$/gm.test($inputLookUpUUID.val()))
     return errorHandler("Player name must only contain letters, numbers and underscores!");
     getPlayerUUID();

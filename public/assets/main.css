@@ -16,6 +16,14 @@ body, input, select, textarea, button, .ui-btn {
 }
 
 /* === IN PAGE BUTTON === */
+button.ui-btn {
+	position: relative !important;
+	left: 50% !important;
+	-ms-transform: translate(-50%);
+	-moz-transform: translate(-50%);
+	-webkit-transform: translate(-50%);
+	transform: translate(-50%) !important;
+}
 .ui-btn.ui-btn-plain {
 	padding: 0;
 	background: #FFF;
@@ -696,15 +704,15 @@ input.ui-input-text, .ui-input-search {
 
 /* === UI POPUPS === */
 .ui-popup {
-	background: rgba(0,0,0,0.75);
-	color: #FFF;
-		-webkit-box-shadow: none;
-		-moz-box-shadow: none;
-		box-shadow: none;
+	background: rgba(0,0,0,0.75) !important;
+	color: #FFF !important;
+		-webkit-box-shadow: none !important;
+		-moz-box-shadow: none !important;
+		box-shadow: none !important;
 }
 .ui-popup p {
 	color: #FFF;
-	text-shadow: none;
+	text-shadow: none !important;
 }
 .ui-popup.ui-body-a {
 	width: 150px;
@@ -794,6 +802,10 @@ input.ui-input-text, .ui-input-search {
 	color: #555555 !important;
 }
 
+[class^="center"] {
+	text-align: center;
+}
+
 [hidden] {
 	display: none;
 }
@@ -857,7 +869,7 @@ ul.achievements li.completed {
 .revert-btn.ui-btn {
 	margin: .5em 0 !important;
 	padding: 0 !important;
-	display: block !important;
+	display: block;
 	position: relative !important;
 	text-align: center !important;
 	cursor: pointer !important;
@@ -949,7 +961,7 @@ ul.achievements li.completed {
 }
 
 .revert-btn.ul-btn {
-	display: block !important;
+	display: block;
 	text-align: center !important;
 	cursor: pointer !important;
 	position: relative !important;
@@ -963,7 +975,7 @@ ul.achievements li.completed {
 }
 
 .revert-btn.ui-btn-left, .revert-btn.ui-btn-right, .revert-btn.ui-btn-inline {
-	display: inline-block !important;
+	display: inline-block;
 	vertical-align: middle !important;
 }
 
@@ -991,6 +1003,75 @@ ul.achievements li.completed {
 }
 
 .ui-header > .revert-btn.ui-btn, .ui-footer > .revert-btn.ui-btn {
-	display: inline-block !important;
+	display: inline-block;
 	margin: 0 !important;
+}
+
+/* ======= */
+.ui-popup[data-overlay-theme^="b"] {
+	width: 272px;
+	height: 147px;
+	background-image: -webkit-radial-gradient(circle, rgba(47,62,102,1) 10%, rgba(32,47,87,1) 100%) !important;
+	background-image: -moz-radial-gradient(circle, rgba(47,62,102,1) 10%, rgba(32,47,87,1) 100%) !important;
+	background-image: -ms-radial-gradient(circle, rgba(47,62,102,1) 10%, rgba(32,47,87,1) 100%) !important;
+	background-image: -o-radial-gradient(circle, rgba(47,62,102,1) 10%, rgba(32,47,87,1) 100%) !important;
+	background-image: radial-gradient(circle, rgba(47,62,102,1) 10%, rgba(32,47,87,1) 100%) !important;
+	border-radius: 9px;
+}
+
+.ui-popup[data-overlay-theme^="b"] div {
+	position: absolute;
+	text-align: center;
+	width: inherit;
+}
+
+.ui-popup[data-overlay-theme^="b"] span {
+	text-shadow: 0 -1px 0 #000;
+}
+
+.ui-popup[data-overlay-theme^="b"] .top {
+	height: 16px;
+	background-image: -webkit-linear-gradient(0deg, #23325A 0%, #939BAE 100%) !important;
+	background-image: -moz-linear-gradient(0deg, #23325A 0%, #939BAE 100%) !important;
+	background-image: -ms-linear-gradient(0deg, #23325A 0%, #939BAE 100%) !important;
+	background-image: -o-linear-gradient(0deg, #23325A 0%, #939BAE 100%) !important;
+	background-image: linear-gradient(0deg, #23325A 0%, #939BAE 100%) !important;
+	border-radius: inherit;
+}
+
+.ui-popup[data-overlay-theme^="b"] .title {
+	font-size: 18px;
+	margin-top: .5em;
+	z-index: 1;
+}
+
+.ui-popup[data-overlay-theme^="b"] .text {
+	font-size: 14px;
+	margin-top: 2.5em;
+}
+
+.ui-popup[data-overlay-theme^="b"] .text span {
+	display: inline-block;
+	width: 240px;
+}
+
+.ui-popup[data-overlay-theme^="b"] .buttons {
+	margin-top: 6em;
+}
+
+.ui-popup[data-overlay-theme^="b"] .buttons button {
+	height: 40px;
+	width: 125px;
+}
+
+.ui-popup[data-overlay-theme^="b"] .buttons .btn-ok {
+	background-image: -webkit-linear-gradient(0deg, #6F7994 0%, #5D6887 50%, #7D869F 50%, #B9BECB 100%);
+	background-image: -moz-linear-gradient(0deg, #6F7994 0%, #5D6887 50%, #7D869F 50%, #B9BECB 100%);
+	background-image: -ms-linear-gradient(0deg, #6F7994 0%, #5D6887 50%, #7D869F 50%, #B9BECB 100%);
+	background-image: -moz-linear-gradient(0deg, #6F7994 0%, #5D6887 50%, #7D869F 50%, #B9BECB 100%);
+	background-image: linear-gradient(0deg, #6F7994 0%, #5D6887 50%, #7D869F 50%, #B9BECB 100%);
+	border-radius: 6px;
+	border-color: #212B48;
+	text-shadow: 0 -1px 0 #000;
+	color: white;
 }
