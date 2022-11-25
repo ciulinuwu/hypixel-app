@@ -806,6 +806,14 @@ input.ui-input-text, .ui-input-search {
 	text-align: center;
 }
 
+[data-action-looking^="false"]::after {
+	content: "Look up";
+}
+
+[data-action-looking^="true"]::after {
+	content: "Looking up...";
+}
+
 [hidden] {
 	display: none;
 }

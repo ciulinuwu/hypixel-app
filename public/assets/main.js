@@ -2,9 +2,7 @@ window.location.hash&&window.location.replace("/");
 var $inputSettingsApiKey=$("[class='Input.Settings.apiKey']"),
 $inputLookUpUUID=$("[class='Input.lookUp.UUID']"),
 $buttonSettingsSApiKey=$("[class^='Button.Settings.s_apiKey']"),
-$textSettingsApiKeyErrMsg=$("[class='Text.Settings.apiKey.ErrorMessage'] > small"),
-$textSettingsApiKeySucMsg=$("[class='Text.Settings.apiKey.SuccessMessage'] > small"),
-$textlookUpErrMsg=$("[class='Text.lookUp.ErrorMessage'] > small"),
+$buttonLookUpSubmit=$("[class^='Button.lookUp.submit']"),
 $gameTypes={},
 $achievements={},
 $endpoint="https://api.hypixel.net",
@@ -21,17 +19,24 @@ $(document).ready(function() {
 });
 /** Get item from storage */
 function getItem(a) {
-    return localStorage.getItem(a);
+    a = localStorage.getItem(a);
+    try {
+        return JSON.parse(a);
+    } catch(b) {
+        return a;
+    }
 }
 $inputSettingsApiKey.val(getItem("apiKey"));
-function globalPopup(a,b,c){
+function $alert(a,b,c){
     $("#globalPop .title span").text(a);
     $("#globalPop .text span").text(b);
     /** Fuck jQuery Mobile Popup Module */
     var d = setInterval(function(){
         $("#globalPop").popup("open");
         clearInterval(d);
-        $("#globalPop button").on("click", c);
+        $("#globalPop button").on("click", "function" === typeof c && c || 
+            function(){$("#globalPop").popup("close");
+        });
     }, 1);
 }
 function app_run(){
@@ -39,7 +44,8 @@ function app_run(){
 }
 function setup_run(){
     $isSetup = !0;
-    globalPopup("Welcome!", "Please enter API key to continue.", function(){
+    localStorage.setItem("cache", JSON.stringify({}));
+    $alert("Welcome!", "Please enter API key to continue.", function(){
         $("#settings a.revert-btn").hide();
         $.mobile.changePage("#settings");
     });
@@ -50,25 +56,18 @@ function setup_chk(){
 function setup_suc(){
     localStorage.setItem("setup", "1");
     $isSetup = !1;
-    alert("API key has been set!\nEnjoy the app!");
-    $.mobile.changePage("#Home");
-    $("#settings .ui-btn-left").show();
-    $textSettingsApiKeyErrMsg.text("");
-    $textSettingsApiKeySucMsg.text("");
+    $alert("API key has been set!", "Enjoy the app!", function(){
+        $.mobile.changePage("#Home");
+        app_run();
+        $("#settings .ui-btn-left").show();
+    });
 }
 function setup_err(a){
     console.error(a);
 }
 function apikey_suc(){
     if ($isSetup) return setup_suc();
-    $textSettingsApiKeySucMsg.text("API key is valid");
-    $textSettingsApiKeyErrMsg.text("");
-}
-function apikey_err(a){
-    a=a.responseText && JSON.parse(a.responseText) || {cause:a};
-    a=a.cause;
-    $textSettingsApiKeyErrMsg.text(a);
-    $textSettingsApiKeySucMsg.text("");
+    $alert("Validation Complete", "Your API key is valid");
 }
 function getPlayerUUID(){
     _fetch("GET", "https://api.ashcon.app/mojang/v2/user/" + $inputLookUpUUID.val(), parsePlayerUUID, errorHandler);
@@ -79,10 +78,8 @@ function parsePlayerUUID(a){
 function errorHandler(a){
     a=a.responseText && JSON.parse(a.responseText) || {cause:a};
     a=a.cause||a.reason;
-    $textlookUpErrMsg.text(a);
-    try{
-        $("#popupiOS").popup("close");
-    } catch(err) {}
+    $buttonLookUpSubmit.attr("data-action-looking", !1);
+    setInterval($alert("Error", a), 1);
 }
 function getServerStats(){
     _fetch("GET", "https://hypixel.krashnz.com/api/v3/stats", parseServerStats);
@@ -107,7 +104,6 @@ function getAchievements(){
 function parseAchievements(a){
     var b=$("[id='stats:player:achievements'] [data-role='collapsibleset']"),
     d;
-    //new Promise(function(c, e){
     for(d in a.achievements){
         c=getGame(d.toUpperCase());
         e=a.achievements[d];
@@ -126,7 +122,6 @@ function parseAchievements(a){
             }).appendTo($("[data-name='"+d+"'] .achievements")),
             $("[data-internal='" + d + "_" + f.toLowerCase() + "']").click(ent_achiv_click);
     }
-    //});
 }
 function ent_achiv_click(a){
     a = a.currentTarget.dataset;
@@ -142,14 +137,14 @@ function getPlayerStats(a){
     }, errorHandler);
 }
 function parsePlayerStats(a){
-    //console.log(a);
-    clearErr();
     clearField();
     clearAchiev();
+    $buttonLookUpSubmit.attr("data-action-looking", !1);
     $lastLogin = a._default.lastLogin;
     $isOnline = a._recentgame.online;
     var b = a._default.prefix || a._default.rank || ("NONE" !== a._default.monthlyPackageRank ? a._default.monthlyPackageRank: !1) || a._default.newPackageRank || "DEFAULT",
     c = a._default.achievementsOneTime;
+    getItem("cache")[a._default.playername.toLowerCase()] || addCache(a._default.playername.toLowerCase(), a._default.uuid);
     // Field.Main
     $("[class='Field.Main.PlayerName']").html(buildName(a._default.displayname, b));
     $("[class='Field.Main.Rank']").html(buildRank(b, a._default.rankPlusColor));
@@ -173,7 +168,9 @@ function parsePlayerStats(a){
     $("[class='Field.networkExp.Experience']").text(parseNumber(a._default.networkExp));
     $("[class='Field.networkExp.expToNextLevel']").text(parseNumber(getLevelUpExp(getNetworkLevel(a._default.networkExp))));
     // Field.achievements
-    for (a = 0; a < c.length; ++a) $("[data-internal='" + c[a] + "']").attr("class", "completed"), $("[data-internal='" + c[a] + "']").attr("data-completed", !0);
+    try {
+        for (a = 0; a < c.length; ++a) $("[data-internal='" + c[a] + "']").attr("class", "completed"), $("[data-internal='" + c[a] + "']").attr("data-completed", !0);
+    } catch(err) {}
     // switch page
     $.mobile.changePage("#stats:player");
 }
@@ -188,12 +185,8 @@ function clearField(){
         $(this).text("");
     });
 }
-function clearErr(){
-    $("p[data-text-color='RED'] > small").each(function(){
-        $(this).text("");
-    });
-}
 function clearAchiev(){
+    $("[data-completed='true']").attr("data-completed", !1);
     $("li.completed").removeAttr("class");
 }
 function _fetch(type, url, success, error) {
@@ -252,7 +245,7 @@ function buildTime(a){
 }
 function buildPlayTime(a, b, c){
     a = b-a;
-    a = addS("hour", addZero(Math.floor(a%864E5/36E5))) + ", " +addS("minute",addZero(Math.floor(a%36E5/6E4))) + ", "+addS("second",addZero(Math.floor(a%6E4/1E3))); c || (a=nHidden());
+    a = addS("day",addZero(Math.floor(a/864E5)))+", "+addS("hour", addZero(Math.floor(a%864E5/36E5))) + ", " +addS("minute",addZero(Math.floor(a%36E5/6E4))) + ", "+addS("second",addZero(Math.floor(a%6E4/1E3))); c || (a=nHidden());
     return a;
 }
 function setPlayTime(){
@@ -341,20 +334,32 @@ function getGame(a){
 function getGameMode(a, b){
     return $gameTypes[a] && $gameTypes[a].modeNames && $gameTypes[a].modeNames[b] || b;
 }
+function addCache(a, b){
+    var c = getItem("cache");
+    c[a] = b;
+    localStorage.setItem("cache", JSON.stringify(c));
+}
+function isUUID(a){
+    var b = /^[0-9a-f]{32}$/i;
+    a = a.replace(/-/g, '');
+    return b.test(a);
+}
 $inputSettingsApiKey.on("input", function(){
     localStorage.setItem("apiKey", $inputSettingsApiKey.val());
 });
 $buttonSettingsSApiKey.click(function(){
-    validateApiKeyRegex($inputSettingsApiKey.val())&&36===$inputSettingsApiKey.val().length?_fetch("GET",$endpoint+"/key?key="+$inputSettingsApiKey.val(),apikey_suc,apikey_err):apikey_err("Invalid API key");
+    validateApiKeyRegex($inputSettingsApiKey.val())&&36===$inputSettingsApiKey.val().length?_fetch("GET",$endpoint+"/key?key="+$inputSettingsApiKey.val(),apikey_suc,errorHandler):errorHandler("Invalid API key");
 });
 $("#lookUp").submit(function(a) {
     a.preventDefault();
-    $("#popupiOS").popup("open");
+    $buttonLookUpSubmit.attr("data-action-looking", !0);
     if ($inputLookUpUUID.val().length < 2)
     return errorHandler("Field cannot be empty.");
-    if (!/^[a-zA-Z0-9_]*$/gm.test($inputLookUpUUID.val()))
+    if (!/^[a-zA-Z0-9_-]*$/gm.test($inputLookUpUUID.val()))
     return errorHandler("Player name must only contain letters, numbers and underscores!");
-    getPlayerUUID();
+    if (getItem("cache")[$inputLookUpUUID.val().toLowerCase()])
+    return getPlayerStats(getItem("cache")[$inputLookUpUUID.val().toLowerCase()]);
+    isUUID($inputLookUpUUID.val()) ? getPlayerStats($inputLookUpUUID.val()) : getPlayerUUID();
     return !1;
 });
 setTimeout(getServerStats, 12e4);

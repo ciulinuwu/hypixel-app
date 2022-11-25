@@ -3,22 +3,11 @@
     <div class="ui-content" data-role="content">
         <form id="lookUp">
             <div class="ui-field-contain" data-role="fieldcontain">
-                <label>Player name:</label>
-                <input class="Input.lookUp.UUID" type="text" autocomplete="new-password" autocorrect="off" placeholder="Playername" />
+                <label>Playername or UUID:</label>
+                <input class="Input.lookUp.UUID" type="text" autocomplete="new-password" autocorrect="off" placeholder="Playername or UUID..." />
                 <p><small>Note: You must have set your API key in settings before you can look up player stats</small></p>
-                <button type="submit" name="submit" value="submit-value">Look up</button>
+                <button class="Button.lookUp.submit" type="submit" name="submit" value="submit-value" data-action-looking="false"></button>
             </div>
         </form>
-
-        <block>
-            <p class="Text.lookUp.ErrorMessage" data-text-color="RED">
-                <small></small>
-            </p>
-        </block>
-
-        <div data-role="popup" data-transition="fade" data-theme="a" data-position-to="window" id="popupiOS">
-            <img src="assets/img/loading.gif">
-            <p>Loading<p>
-        </div>
     </div>
 </div>
