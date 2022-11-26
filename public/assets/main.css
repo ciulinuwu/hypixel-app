@@ -185,11 +185,15 @@ button.ui-btn {
 			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6d8291', endColorstr='#8ea0ad',GradientType=0 ); /* IE6-9 */
 }
 
-.ui-listview .ui-icon-arrow-r {
-	background: transparent url(img/arrow_right.png) center center no-repeat !important;
-		-webkit-border-radius: 0;
-		-moz-border-radius: 0;
-		border-radius: 0;
+.ui-btn-icon-left::after, .ui-btn-icon-right::after, .ui-btn-icon-top::after, .ui-btn-icon-bottom::after, .ui-btn-icon-notext::after {
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	background-color: unset;
+}
+
+.ui-icon-carat-r::after {
+	background-image: url(img/arrow_right.png) !important;
 }
 
 /* === SLIDER STYLES === */
@@ -802,6 +806,10 @@ input.ui-input-text, .ui-input-search {
 	color: #555555 !important;
 }
 
+.fixmargin {
+	margin-top: 16px;
+}
+
 [class^="center"] {
 	text-align: center;
 }
@@ -1070,16 +1078,23 @@ ul.achievements li.completed {
 .ui-popup[data-overlay-theme^="b"] .buttons button {
 	height: 40px;
 	width: 125px;
+	border-radius: 3px;
+	border: 1px solid #212B48;
+	text-shadow: 0 -1px 0 #000;
+	color: white;
 }
 
-.ui-popup[data-overlay-theme^="b"] .buttons .btn-ok {
+.ui-popup[data-overlay-theme^="b"] .buttons .btn-a {
 	background-image: -webkit-linear-gradient(0deg, #6F7994 0%, #5D6887 50%, #7D869F 50%, #B9BECB 100%);
 	background-image: -moz-linear-gradient(0deg, #6F7994 0%, #5D6887 50%, #7D869F 50%, #B9BECB 100%);
 	background-image: -ms-linear-gradient(0deg, #6F7994 0%, #5D6887 50%, #7D869F 50%, #B9BECB 100%);
 	background-image: -moz-linear-gradient(0deg, #6F7994 0%, #5D6887 50%, #7D869F 50%, #B9BECB 100%);
 	background-image: linear-gradient(0deg, #6F7994 0%, #5D6887 50%, #7D869F 50%, #B9BECB 100%);
-	border-radius: 6px;
-	border-color: #212B48;
-	text-shadow: 0 -1px 0 #000;
-	color: white;
+}
+.ui-popup[data-overlay-theme^="b"] .buttons .btn-b {
+	background-image: -webkit-linear-gradient(0deg, #354369 0%, #2E3D65 50%, #4B577A 50%, #858EA5 100%);
+	background-image: -moz-linear-gradient(0deg, #354369 0%, #2E3D65 50%, #4B577A 50%, #858EA5 100%);
+	background-image: -ms-linear-gradient(0deg, #354369 0%, #2E3D65 50%, #4B577A 50%, #858EA5 100%);
+	background-image: -moz-linear-gradient(0deg, #354369 0%, #2E3D65 50%, #4B577A 50%, #858EA5 100%);
+	background-image: linear-gradient(0deg, #354369 0%, #2E3D65 50%, #4B577A 50%, #858EA5 100%);
 }

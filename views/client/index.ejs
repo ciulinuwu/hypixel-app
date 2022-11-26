@@ -3,12 +3,13 @@
 <head>
     <%-include("./head")%>
 </head>
-<body>
+<body style="overflow:hidden">
     <%
     function find(param) {
         return data.get(param);
     }
     %>
+    <%-include("./pages/noscript")%>
     <%-include("./pages/home")%>
     <%-include("./pages/credits", {data: find("credits")})%>
     <%-include("./pages/settings")%>
@@ -18,14 +19,7 @@
     <%-include("./pages/stats_player_networkexp", {data: find("stats_profile_networkexp")})%>
     <%-include("./pages/stats_player_achievements", {data: find("stats_profile_achievements")})%>
     <%-include("./pages/stats_server", {data: find("stats_server")})%>
-    <div data-role="popup" data-transition="fade" data-overlay-theme="b" data-position-to="window" id="globalPop">
-        <div class="top"></div>
-        <div class="title"><span></span></div>
-        <div class="text"><span></span></div>
-        <div class="buttons">
-            <button class="btn-ok">OK</button>
-        </div>
-    </div>
+    <%-include("./ui/popup")%>
     <script async="" src="assets/main.min.js"></script>
 </body>
 </html>

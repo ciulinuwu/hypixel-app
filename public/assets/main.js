@@ -1,8 +1,19 @@
 window.location.hash&&window.location.replace("/");
+try {
+    $, jQuery;
+} catch(err) {
+    var a = document.getElementsByTagName("noscript")[0];
+    a.outerHTML = a.innerHTML;
+    a = document.getElementById("error");
+    a.getElementsByTagName("a")[0].innerText = navigator.userAgent;
+    a.getElementsByTagName("div")[1].removeAttribute("hidden");
+    a.getElementsByTagName("div")[0].setAttribute("hidden", "");
+}
 var $inputSettingsApiKey=$("[class='Input.Settings.apiKey']"),
 $inputLookUpUUID=$("[class='Input.lookUp.UUID']"),
 $buttonSettingsSApiKey=$("[class^='Button.Settings.s_apiKey']"),
 $buttonLookUpSubmit=$("[class^='Button.lookUp.submit']"),
+$buttonSettingsClearCache=$("[class^='Button.Settings.clearCache']"),
 $gameTypes={},
 $achievements={},
 $endpoint="https://api.hypixel.net",
@@ -10,7 +21,13 @@ $isSetup=!1,
 $lastLogin=0,
 $isOnline=!1,
 $data = {};
+try {
+    getItem("");
+} catch(err) {
+    $alert("Cookies are disabled", "Local Storage is required for the app to function correctly.");
+}
 $(document).ready(function() {
+    $("body").removeAttr("style");
     $("#globalPop").popup();
     setup_chk();
     getServerStats();
@@ -27,16 +44,22 @@ function getItem(a) {
     }
 }
 $inputSettingsApiKey.val(getItem("apiKey"));
-function $alert(a,b,c){
+function $alert(a,b,c,d){
+    b = b.replace(/(\r\n|\r|\n)/g, "<br/>");
     $("#globalPop .title span").text(a);
-    $("#globalPop .text span").text(b);
+    $("#globalPop .text span").html(b);
     /** Fuck jQuery Mobile Popup Module */
-    var d = setInterval(function(){
+    var f = function(){
+        $("#globalPop").popup("close");
+        $("#globalPop button").unbind("click");
+    };
+    var e = setInterval(function(){
         $("#globalPop").popup("open");
-        clearInterval(d);
-        $("#globalPop button").on("click", "function" === typeof c && c || 
-            function(){$("#globalPop").popup("close");
-        });
+        clearInterval(e);
+        1 === d && $("#globalPop button.btn-b").removeAttr("hidden");
+        1 !== d && $("#globalPop button.btn-b").attr("hidden", "");
+        $("#globalPop button.btn-a").on("click", "function" === typeof c && c || f);
+        $("#globalPop button.btn-b").on("click", f);
     }, 1);
 }
 function app_run(){
@@ -47,6 +70,7 @@ function setup_run(){
     localStorage.setItem("cache", JSON.stringify({}));
     $alert("Welcome!", "Please enter API key to continue.", function(){
         $("#settings a.revert-btn").hide();
+        $(".OTHERSETTINGS").hide();
         $.mobile.changePage("#settings");
     });
 }
@@ -60,6 +84,7 @@ function setup_suc(){
         $.mobile.changePage("#Home");
         app_run();
         $("#settings .ui-btn-left").show();
+        $(".OTHERSETTINGS").show();
     });
 }
 function setup_err(a){
@@ -147,7 +172,7 @@ function parsePlayerStats(a){
     getItem("cache")[a._default.playername.toLowerCase()] || addCache(a._default.playername.toLowerCase(), a._default.uuid);
     // Field.Main
     $("[class='Field.Main.PlayerName']").html(buildName(a._default.displayname, b));
-    $("[class='Field.Main.Rank']").html(buildRank(b, a._default.rankPlusColor));
+    $("[class='Field.Main.Rank']").html(buildRank(b, a._default.rankPlusColor || "GOLD"));
     $("[class='Field.Main.firstLogin']").text(buildTime(a._default.firstLogin));
     $("[class='Field.Main.lastLogin']").text(buildTime(a._default.lastLogin));
     $("[class='Field.Main.networkExp']").text(parseNumber(a._default.networkExp));
@@ -350,6 +375,14 @@ $inputSettingsApiKey.on("input", function(){
 $buttonSettingsSApiKey.click(function(){
     validateApiKeyRegex($inputSettingsApiKey.val())&&36===$inputSettingsApiKey.val().length?_fetch("GET",$endpoint+"/key?key="+$inputSettingsApiKey.val(),apikey_suc,errorHandler):errorHandler("Invalid API key");
 });
+$buttonSettingsClearCache.click(function(){
+    $alert("Confirmation", "Are you sure about clearing cache?", function(){
+        localStorage.setItem("cache", JSON.stringify({}));
+        $("#globalPop button").unbind("click");
+        $("#globalPop").popup("close");
+        setTimeout(function(){$alert("Done", "Cache Storage has been emptied");}, 1000);
+    }, 1);
+});
 $("#lookUp").submit(function(a) {
     a.preventDefault();
     $buttonLookUpSubmit.attr("data-action-looking", !0);
@@ -362,6 +395,6 @@ $("#lookUp").submit(function(a) {
     isUUID($inputLookUpUUID.val()) ? getPlayerStats($inputLookUpUUID.val()) : getPlayerUUID();
     return !1;
 });
-setTimeout(getServerStats, 12e4);
-setTimeout(getWatchdogStats, 12e4);
+setInterval(getServerStats, 12e4);
+setInterval(getWatchdogStats, 12e4);
 setInterval(setPlayTime);

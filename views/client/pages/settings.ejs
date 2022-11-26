@@ -2,10 +2,17 @@
     <%-include("../ui/header", {name: "Settings", back: "#"}) %>
     <div class="ui-content" data-role="content">
         <div data-role="fieldcontain">
-            <label>API Key:</label>
+            <p>API Key:</p>
             <input class="Input.Settings.apiKey" type="text" autocorrect="off" />
+            <button class="Button.Settings.s_apiKey fixmargin">Validate</button>
             <p><small>Note: You can find your API key by logging into the Hypixel server and typing "/api"</small></p>
-            <button class="Button.Settings.s_apiKey">Validate</button>
+        </div>
+        <div class="OTHERSETTINGS">
+            <div data-role="fieldcontain">
+                <p>Clear cache:</p>
+                <button class="Button.Settings.clearCache">Clear</button>
+                <p><small>Note: Will erase all cached UUIDs</small></p>
+            </div>
         </div>
     </div>
 </div>
