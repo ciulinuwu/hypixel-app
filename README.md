@@ -18,15 +18,17 @@ Hypixel.app is yet another stats viewer but with Apple Web Application Capabilit
 # Acknowledgements
 
 Hypixel.app was made with love by [@ciulinuwu](https://github.com/ciulinuwu) using these tools:
-* NodeJS
-* Concurrently
-* Nodemon
-* TypeScript
-* Express
-* iOS-Inspired-jQuery-Mobile-Theme
-* jQuery
-* jQuery Mobile
-* Hypixel API
-* hypixel.krashnz.com
-* Ashcon Mojang API
-* Minecraftia Font
+* [NodeJS](https://nodejs.org)
+* [Concurrently](https://github.com/open-cli-tools/concurrently)
+* [Nodemon](https://github.com/remy/nodemon)
+* [TypeScript](https://typescriptlang.org)
+* [Express](https://expressjs.com)
+* [iOS-Inspired-jQuery-Mobile-Theme](https://taitems.github.io/iOS-Inspired-jQuery-Mobile-Theme)
+* [jQuery](https://jquery.com)
+* [jQuery Mobile](https://jquerymobile.com)
+* [Three.js](https://threejs.org)
+* [MineRender](https://github.com/InventivetalentDev/MineRender)
+* [Hypixel API](https://api.hypixel.net)
+* [hypixel.krashnz.com](https://hypixel.krashnz.com)
+* [Ashcon Mojang API](https://github.com/Electroid/mojang-api)
+* [Minecraftia Font](https://www.dafont.com/minecraftia.font)

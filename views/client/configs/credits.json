@@ -32,6 +32,14 @@
         "b": "jQuery Mobile"
     },
     {
+        "a": "https://threejs.org",
+        "b": "Three.js"
+    },
+    {
+        "a": "https://github.com/InventivetalentDev/MineRender",
+        "b": "MineRender"
+    },
+    {
         "a": "https://api.hypixel.net",
         "b": "Hypixel API"
     },

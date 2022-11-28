@@ -20,7 +20,9 @@ $endpoint="https://api.hypixel.net",
 $isSetup=!1,
 $lastLogin=0,
 $isOnline=!1,
-$data = {};
+$currUUID="",
+$data = {},
+skinRender = new SkinRender({}, document.getElementsByClassName("mcskin")[0]);
 try {
     getItem("");
 } catch(err) {
@@ -44,22 +46,22 @@ function getItem(a) {
     }
 }
 $inputSettingsApiKey.val(getItem("apiKey"));
+function $alert_close(){
+    $("#globalPop").popup("close");
+    $("#globalPop button").unbind("click");
+}
 function $alert(a,b,c,d){
     b = b.replace(/(\r\n|\r|\n)/g, "<br/>");
     $("#globalPop .title span").text(a);
     $("#globalPop .text span").html(b);
     /** Fuck jQuery Mobile Popup Module */
-    var f = function(){
-        $("#globalPop").popup("close");
-        $("#globalPop button").unbind("click");
-    };
     var e = setInterval(function(){
         $("#globalPop").popup("open");
         clearInterval(e);
         1 === d && $("#globalPop button.btn-b").removeAttr("hidden");
         1 !== d && $("#globalPop button.btn-b").attr("hidden", "");
-        $("#globalPop button.btn-a").on("click", "function" === typeof c && c || f);
-        $("#globalPop button.btn-b").on("click", f);
+        $("#globalPop button.btn-a").on("click", "function" === typeof c && c || $alert_close);
+        $("#globalPop button.btn-b").on("click", $alert_close);
     }, 1);
 }
 function app_run(){
@@ -167,9 +169,14 @@ function parsePlayerStats(a){
     $buttonLookUpSubmit.attr("data-action-looking", !1);
     $lastLogin = a._default.lastLogin;
     $isOnline = a._recentgame.online;
+    $currUUID = a._default.playername;
     var b = a._default.prefix || a._default.rank || ("NONE" !== a._default.monthlyPackageRank ? a._default.monthlyPackageRank: !1) || a._default.newPackageRank || "DEFAULT",
     c = a._default.achievementsOneTime;
-    getItem("cache")[a._default.playername.toLowerCase()] || addCache(a._default.playername.toLowerCase(), a._default.uuid);
+    getItem("cache")[a._default.playername.toLowerCase()] || addCache("cache", a._default.playername.toLowerCase(), a._default.uuid);
+
+    $("[href='#stats:player:view']").on("click", function() {
+        skinRender.render($currUUID);
+    });
     // Field.Main
     $("[class='Field.Main.PlayerName']").html(buildName(a._default.displayname, b));
     $("[class='Field.Main.Rank']").html(buildRank(b, a._default.rankPlusColor || "GOLD"));
@@ -359,10 +366,10 @@ function getGame(a){
 function getGameMode(a, b){
     return $gameTypes[a] && $gameTypes[a].modeNames && $gameTypes[a].modeNames[b] || b;
 }
-function addCache(a, b){
-    var c = getItem("cache");
-    c[a] = b;
-    localStorage.setItem("cache", JSON.stringify(c));
+function addCache(a, b, c){
+    var d = getItem(a);
+    d[b] = c;
+    localStorage.setItem(a, JSON.stringify(d));
 }
 function isUUID(a){
     var b = /^[0-9a-f]{32}$/i;
@@ -376,10 +383,9 @@ $buttonSettingsSApiKey.click(function(){
     validateApiKeyRegex($inputSettingsApiKey.val())&&36===$inputSettingsApiKey.val().length?_fetch("GET",$endpoint+"/key?key="+$inputSettingsApiKey.val(),apikey_suc,errorHandler):errorHandler("Invalid API key");
 });
 $buttonSettingsClearCache.click(function(){
-    $alert("Confirmation", "Are you sure about clearing cache?", function(){
+    $alert("Confirmation", "Are you sure you want to clear the cache?", function(){
         localStorage.setItem("cache", JSON.stringify({}));
-        $("#globalPop button").unbind("click");
-        $("#globalPop").popup("close");
+        $alert_close();
         setTimeout(function(){$alert("Done", "Cache Storage has been emptied");}, 1000);
     }, 1);
 });
@@ -390,7 +396,7 @@ $("#lookUp").submit(function(a) {
     return errorHandler("Field cannot be empty.");
     if (!/^[a-zA-Z0-9_-]*$/gm.test($inputLookUpUUID.val()))
     return errorHandler("Player name must only contain letters, numbers and underscores!");
-    if (getItem("cache")[$inputLookUpUUID.val().toLowerCase()])
+    if (getItem("cache") && getItem("cache")[$inputLookUpUUID.val().toLowerCase()])
     return getPlayerStats(getItem("cache")[$inputLookUpUUID.val().toLowerCase()]);
     isUUID($inputLookUpUUID.val()) ? getPlayerStats($inputLookUpUUID.val()) : getPlayerUUID();
     return !1;

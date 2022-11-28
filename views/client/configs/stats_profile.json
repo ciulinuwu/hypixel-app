@@ -1,7 +1,8 @@
 [
     {
         "a": "Player Name",
-        "b": "Field.Main.PlayerName" 
+        "b": "Field.Main.PlayerName",
+        "c": "#stats:player:view"
     },
     {
         "a": "Server Rank",
