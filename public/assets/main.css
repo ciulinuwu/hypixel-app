@@ -425,6 +425,8 @@ a[data-rel='back'], .ui-header a[data-rel='back'] {
 
 a[data-rel='back'] .ui-btn-inner {
 	background: transparent url(img/backButtonSprite.png) right 0 no-repeat !important;
+	color: white;
+	text-shadow: 0 -1px 1px #000 !important;
 	margin: 0 0 0 15px !important;
 	padding: 0 8px 0 0 !important;
 	height: 30px;
@@ -824,6 +826,10 @@ input.ui-input-text, .ui-input-search {
 
 [hidden] {
 	display: none;
+}
+
+[id^="stats:player:view"] .ui-content {
+	padding: 0;
 }
 
 ul.achievements {

@@ -19,9 +19,15 @@
     <%-include("./pages/stats_player_recentgame", {data: find("stats_profile_recentgame")})%>
     <%-include("./pages/stats_player_networkexp", {data: find("stats_profile_networkexp")})%>
     <%-include("./pages/stats_player_achievements", {data: find("stats_profile_achievements")})%>
+    <%-include("./pages/stats_player_stats", {data: find("stats_profile_stats")})%>
     <%-include("./pages/stats_server", {data: find("stats_server")})%>
     <%-include("./ui/popup")%>
     <script src="/assets/lib/minerender/skin.min.js"></script>
     <script async="" src="assets/main.min.js"></script>
+    <script>
+try {
+    skinRender = new SkinRender({}, document.getElementsByClassName("mcskin")[0]);
+} catch(err) {}
+    </script>
 </body>
 </html>

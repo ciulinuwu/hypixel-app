@@ -40,6 +40,10 @@
         "c": "#stats:player:achievements"
     },
     {
+        "a": "Stats",
+        "c": "#stats:player:stats"
+    },
+    {
         "a": "Player UUID",
         "b": "Field.Main.UUID" 
     }
